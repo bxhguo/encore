@@ -1,0 +1,400 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Encore for Mac</title>
+<meta name="description" content="Encore turns what's playing in Spotify or Apple Music into a living desktop, a notch island and an album-colored glow.">
+<meta property="og:title" content="Encore for Mac">
+<meta property="og:description" content="A living desktop, a notch island and an album-colored glow for whatever you're playing.">
+<meta property="og:image" content="assets/img/scene-midnightRain.jpg">
+<meta name="theme-color" content="#0e0913" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#f3f0f6" media="(prefers-color-scheme: light)">
+<link rel="icon" type="image/png" href="favicon.png">
+<link rel="preload" href="assets/fonts/bricolage-grotesque-latin-standard-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="assets/img/scene-midnightRain.jpg" as="image">
+<style>
+/* Fonts are self-hosted (Fontsource builds), so the page works on any static host. */
+@font-face { font-family: "Bricolage Grotesque"; src: url("assets/fonts/bricolage-grotesque-latin-standard-normal.woff2") format("woff2"); font-weight: 200 800; font-stretch: 75% 100%; font-display: swap; }
+@font-face { font-family: "Geist"; src: url("assets/fonts/geist-latin-wght-normal.woff2") format("woff2"); font-weight: 100 900; font-display: swap; }
+@font-face { font-family: "Geist Mono"; src: url("assets/fonts/geist-mono-latin-wght-normal.woff2") format("woff2"); font-weight: 100 900; font-display: swap; }
+
+/* Layout: asymmetric split hero, a tabbed scene viewer, an island collage, a 4-cell details grid, then the download.
+   Palette: the app's own night, plum-black with one magenta accent. Light theme keeps the plum, swaps the ground. */
+:root {
+  --bg: #f3f0f6;
+  --bg-raised: #ebe6f0;
+  --surface: #faf8fb;
+  --fg: #1c1322;
+  --muted: #5d5166;
+  --line: rgba(28, 19, 34, .12);
+  --accent: #c0175d;
+  --accent-ink: #fff6fa;
+  --stage: #120b18;
+  --shadow: 28, 12, 38;
+  --display: "Bricolage Grotesque", "Avenir Next", "Helvetica Neue", system-ui, sans-serif;
+  --body: "Geist", "SF Pro Text", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: "Geist Mono", ui-monospace, "SF Mono", Menlo, monospace;
+  --radius: 14px;
+  --gutter: max(20px, env(safe-area-inset-left, 0px));
+  --gutter-r: max(20px, env(safe-area-inset-right, 0px));
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0e0913; --bg-raised: #150e1b; --surface: #1b1222; --fg: #f3edf6; --muted: #a99bb4;
+    --line: rgba(243, 237, 246, .1); --accent: #ff4b93; --accent-ink: #1d0612; --stage: #07040a; --shadow: 0, 0, 0;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0e0913; --bg-raised: #150e1b; --surface: #1b1222; --fg: #f3edf6; --muted: #a99bb4;
+  --line: rgba(243, 237, 246, .1); --accent: #ff4b93; --accent-ink: #1d0612; --stage: #07040a; --shadow: 0, 0, 0;
+  color-scheme: dark;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
+body {
+  margin: 0; background: var(--bg); color: var(--fg);
+  font: 400 17px/1.6 var(--body); -webkit-font-smoothing: antialiased;
+  padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+img { max-width: 100%; height: auto; display: block; }
+a { color: inherit; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 6px; }
+.wrap { max-width: 1200px; margin: 0 auto; padding-left: var(--gutter); padding-right: var(--gutter-r); }
+h1, h2, h3 { font-family: var(--display); font-weight: 700; letter-spacing: -0.025em; line-height: 1.04; margin: 0; text-wrap: balance; font-stretch: 88%; }
+h2 { font-size: clamp(2rem, 1.4rem + 2.4vw, 3.1rem); }
+h3 { font-size: 1.3rem; letter-spacing: -0.015em; line-height: 1.15; }
+p { margin: 0; text-wrap: pretty; }
+.lede { color: var(--muted); max-width: 52ch; font-size: 1.1rem; }
+.icon { width: 1.15em; height: 1.15em; flex: none; }
+
+/* Buttons: one primary style, pill-shaped; everything else on the page uses the 14px radius. */
+.btn {
+  display: inline-flex; align-items: center; gap: .55em; white-space: nowrap;
+  font: 600 1rem/1 var(--body); text-decoration: none;
+  padding: .95em 1.4em; border-radius: 999px; border: 0; cursor: pointer;
+  background: var(--accent); color: var(--accent-ink);
+  box-shadow: 0 10px 30px -12px rgba(var(--shadow), .55), inset 0 1px 0 rgba(255, 255, 255, .25);
+  transition: transform .25s cubic-bezier(.16, 1, .3, 1), box-shadow .25s cubic-bezier(.16, 1, .3, 1), filter .2s;
+}
+.btn:hover { transform: translateY(-2px); filter: brightness(1.06); }
+.btn:active { transform: translateY(1px) scale(.985); }
+.btn.small { font-size: .9rem; padding: .7em 1.1em; }
+.link { display: inline-flex; align-items: center; gap: .45em; font-weight: 600; text-decoration: none; color: var(--fg); padding: .95em .2em; }
+.link .icon { transition: transform .25s cubic-bezier(.16, 1, .3, 1); }
+.link:hover .icon { transform: translateX(4px); }
+
+/* Nav */
+header.top { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 20; background: color-mix(in srgb, var(--bg) 82%, transparent); backdrop-filter: blur(14px) saturate(140%); -webkit-backdrop-filter: blur(14px) saturate(140%); border-bottom: 1px solid var(--line); }
+body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 30; background: var(--bg); }
+.nav { height: 66px; display: flex; align-items: center; gap: 28px; }
+.brand { display: inline-flex; align-items: center; gap: 10px; text-decoration: none; font: 700 1.2rem/1 var(--display); letter-spacing: -0.02em; margin-right: auto; }
+.brand img { width: 30px; height: 30px; }
+.nav a.plain { text-decoration: none; color: var(--muted); font-weight: 500; font-size: .95rem; }
+.nav a.plain:hover { color: var(--fg); }
+
+/* Hero: copy left, the real desktop on the right with the island hanging from its top edge */
+.hero { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: clamp(28px, 5vw, 72px); align-items: center; padding-block: clamp(40px, 7vw, 88px) clamp(48px, 7vw, 96px); }
+.hero h1 { font-size: clamp(2.6rem, 1.5rem + 3.6vw, 4.4rem); }
+.hero .lede { margin-top: 22px; }
+.hero .actions { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 22px; margin-top: 32px; }
+.shot { position: relative; isolation: isolate; }
+.shot::before { content: ""; position: absolute; inset: 8% -6% -10% 4%; z-index: -1; border-radius: 40%; background: radial-gradient(closest-side, color-mix(in srgb, var(--accent) 38%, transparent), transparent); filter: blur(40px); opacity: .7; }
+.shot .desk { border-radius: var(--radius); box-shadow: 0 40px 80px -30px rgba(var(--shadow), .7), 0 0 0 1px var(--line); aspect-ratio: 1470 / 956; object-fit: cover; width: 100%; background: var(--stage); }
+.shot .island { position: absolute; left: 50%; top: 0; width: 56%; transform: translateX(-50%); filter: drop-shadow(0 14px 22px rgba(0, 0, 0, .35)); }
+@media (prefers-reduced-motion: no-preference) {
+  .hero .copy > * { animation: rise .9s cubic-bezier(.16, 1, .3, 1) both; }
+  .hero .copy > :nth-child(2) { animation-delay: .06s; }
+  .hero .copy > :nth-child(3) { animation-delay: .12s; }
+  .shot .desk { animation: settle 1.1s cubic-bezier(.16, 1, .3, 1) both; }
+  .shot .island { animation: drop 1s .45s cubic-bezier(.34, 1.4, .64, 1) both; }
+  @keyframes rise { from { transform: translateY(14px); opacity: .01; } }
+  @keyframes settle { from { transform: translateY(18px) scale(.985); opacity: .01; } }
+  @keyframes drop { from { transform: translate(-50%, -24px) scaleX(.55); opacity: .01; } }
+}
+
+/* Works-with strip */
+.works { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 14px 36px; padding-block: 26px; border-block: 1px solid var(--line); color: var(--muted); font-size: .95rem; }
+.works .marks { display: flex; gap: 30px; align-items: center; }
+.mark { display: inline-flex; align-items: center; gap: 10px; color: var(--fg); font-weight: 600; }
+.mark i { width: 26px; height: 26px; background: currentColor; -webkit-mask: var(--m) center / contain no-repeat; mask: var(--m) center / contain no-repeat; }
+
+section { padding-block: clamp(72px, 10vw, 128px); }
+
+/* Scenes: segmented switcher over one large frame */
+.scenes header { display: grid; gap: 14px; max-width: 760px; }
+.switch { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 36px; padding: 5px; background: var(--bg-raised); border: 1px solid var(--line); border-radius: 999px; width: fit-content; max-width: 100%; }
+.switch button { font: 600 .92rem/1 var(--body); color: var(--muted); background: transparent; border: 0; border-radius: 999px; padding: .75em 1.1em; cursor: pointer; transition: background .25s, color .25s; }
+.switch button:hover { color: var(--fg); }
+.switch button[aria-selected="true"] { background: var(--surface); color: var(--fg); box-shadow: 0 1px 0 rgba(255, 255, 255, .06) inset, 0 6px 16px -10px rgba(var(--shadow), .6); }
+.stage { margin-top: 20px; display: grid; }
+.stage figure { margin: 0; grid-area: 1 / 1; transition: opacity .55s cubic-bezier(.16, 1, .3, 1); }
+.stage figure[hidden] { display: block !important; opacity: 0; visibility: hidden; pointer-events: none; transition: opacity .55s cubic-bezier(.16, 1, .3, 1), visibility 0s .55s; }
+.stage img { width: 100%; aspect-ratio: 1470 / 956; object-fit: cover; border-radius: var(--radius); background: var(--stage); box-shadow: 0 30px 70px -36px rgba(var(--shadow), .65), 0 0 0 1px var(--line); }
+.stage figcaption { margin-top: 18px; color: var(--muted); max-width: 62ch; }
+.stage figcaption strong { color: var(--fg); font-weight: 600; }
+
+/* Island: copy left, a staggered stack of real island states right */
+.island-sec { display: grid; grid-template-columns: minmax(0, 4fr) minmax(0, 6fr); gap: clamp(32px, 6vw, 88px); align-items: center; }
+.island-sec .lede { margin-top: 18px; }
+.gestures { list-style: none; padding: 0; margin: 30px 0 0; display: grid; gap: 14px; }
+.gestures li { display: grid; grid-template-columns: 92px 1fr; gap: 16px; align-items: baseline; }
+.gestures b { font: 500 .78rem/1.4 var(--mono); letter-spacing: .04em; text-transform: uppercase; color: var(--accent); }
+.collage { position: relative; display: grid; gap: 0; padding: 18px; border-radius: calc(var(--radius) + 8px); background: radial-gradient(120% 90% at 20% 0%, #2b1433, var(--stage) 60%); }
+.collage img { width: 92%; }
+.collage img:nth-child(2) { margin: -6% 0 0 auto; }
+.collage img:nth-child(3) { margin-top: -7%; width: 80%; margin-left: 4%; }
+
+/* Details: four cells, asymmetric rows */
+.details h2 { max-width: 16ch; }
+.grid { margin-top: 44px; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+.cell { position: relative; overflow: hidden; border-radius: var(--radius); background: var(--surface); border: 1px solid var(--line); display: flex; flex-direction: column; min-height: 340px; }
+.cell .art { flex: 1; min-height: 200px; position: relative; overflow: hidden; }
+.cell .art img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; transition: transform 1.2s cubic-bezier(.16, 1, .3, 1); }
+.cell:hover .art img { transform: scale(1.03); }
+.cell .txt { padding: 22px 24px 24px; display: grid; gap: 8px; }
+.cell .txt p { color: var(--muted); font-size: .98rem; }
+.cell.wide { grid-column: span 2; }
+.cell.deck .art { background: #6a4022; }
+.cell.glow .art { background: var(--stage); }
+.cell.glow .art .glowframe { object-fit: fill; mix-blend-mode: screen; }
+.cell.lyrics .art { background: radial-gradient(110% 120% at 80% 0%, #3a1631, var(--stage) 65%); }
+.cell.lyrics .art img { object-fit: contain; object-position: center top; inset: 6% 6% auto; width: 88%; height: auto; }
+
+/* Download */
+.get { background: var(--bg-raised); border-block: 1px solid var(--line); }
+.get .inner { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: clamp(32px, 6vw, 80px); align-items: start; }
+.app { display: grid; gap: 22px; justify-items: start; }
+.app img { width: 132px; height: 132px; }
+.app h2 { font-size: clamp(2.2rem, 1.6rem + 2vw, 3.2rem); }
+.facts { display: grid; grid-template-columns: auto 1fr; gap: 8px 22px; margin: 4px 0 0; font-size: .95rem; }
+.facts dt { color: var(--muted); }
+.facts dd { margin: 0; font-variant-numeric: tabular-nums; }
+.first { display: grid; gap: 18px; }
+.first h3 { font-size: 1.15rem; }
+.first > p { color: var(--muted); max-width: 58ch; }
+.steps { list-style: none; counter-reset: s; padding: 0; margin: 6px 0 0; display: grid; gap: 12px; }
+.steps li { counter-increment: s; display: grid; grid-template-columns: 34px 1fr; gap: 14px; align-items: start; background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 16px 18px; }
+.steps li::before { content: counter(s); display: grid; place-items: center; width: 30px; height: 30px; border-radius: 50%; font: 600 .85rem/1 var(--mono); color: var(--accent-ink); background: var(--accent); }
+.steps b { font-weight: 600; }
+.perm { color: var(--muted); font-size: .95rem; max-width: 60ch; }
+
+footer { padding-block: 36px 48px; color: var(--muted); font-size: .9rem; }
+footer .wrap { display: flex; flex-wrap: wrap; gap: 10px 28px; justify-content: space-between; }
+footer a { text-decoration: none; border-bottom: 1px solid var(--line); }
+
+/* Phones and small tablets: everything stacks to one column */
+@media (max-width: 860px) {
+  .hero, .island-sec, .get .inner { grid-template-columns: minmax(0, 1fr); }
+  .hero { padding-top: 32px; }
+  .shot { margin-top: 8px; }
+  .grid { grid-template-columns: minmax(0, 1fr); }
+  .cell.wide { grid-column: auto; }
+  .nav a.plain { display: none; }
+}
+@media (max-width: 480px) {
+  body { font-size: 16px; }
+  .switch { border-radius: 18px; }
+  .gestures li { grid-template-columns: 1fr; gap: 2px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { transition-duration: .01ms !important; animation: none !important; }
+}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="wrap nav">
+    <a class="brand" href="#top" aria-label="Encore home"><img src="assets/img/icon.png" alt="" width="30" height="30">Encore</a>
+    <a class="plain" href="#scenes">Scenes</a>
+    <a class="plain" href="#island">Island</a>
+    <a class="btn small" href="#download">
+      <svg class="icon" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M224,144v64a8,8,0,0,1-8,8H40a8,8,0,0,1-8-8V144a8,8,0,0,1,16,0v56H208V144a8,8,0,0,1,16,0Zm-101.66,5.66a8,8,0,0,0,11.32,0l40-40a8,8,0,0,0-11.32-11.32L136,124.69V32a8,8,0,0,0-16,0v92.69L93.66,98.34a8,8,0,0,0-11.32,11.32Z"/></svg>
+      Download for Mac
+    </a>
+  </div>
+</header>
+
+<main id="top">
+  <div class="wrap hero">
+    <div class="copy">
+      <h1>Put the record on your desktop.</h1>
+      <p class="lede">Encore turns what's playing in Spotify or Music into a living desktop, a notch island and an album-colored glow.</p>
+      <div class="actions">
+        <a class="btn" href="downloads/Encore-1.0.0.dmg" download>
+          <svg class="icon" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M224,144v64a8,8,0,0,1-8,8H40a8,8,0,0,1-8-8V144a8,8,0,0,1,16,0v56H208V144a8,8,0,0,1,16,0Zm-101.66,5.66a8,8,0,0,0,11.32,0l40-40a8,8,0,0,0-11.32-11.32L136,124.69V32a8,8,0,0,0-16,0v92.69L93.66,98.34a8,8,0,0,0-11.32,11.32Z"/></svg>
+          Download for Mac
+        </a>
+        <a class="link" href="#scenes">See the scenes
+          <svg class="icon" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M221.66,133.66l-72,72a8,8,0,0,1-11.32-11.32L196.69,136H40a8,8,0,0,1,0-16H196.69L138.34,61.66a8,8,0,0,1,11.32-11.32l72,72A8,8,0,0,1,221.66,133.66Z"/></svg>
+        </a>
+      </div>
+    </div>
+    <div class="shot">
+      <img class="desk" src="assets/img/scene-midnightRain.jpg" width="1800" height="1171" alt="The Midnight Rain desktop scene: a turntable, an album in its stand and a neon tube on a windowsill, with a rainy city street outside.">
+      <img class="island" src="assets/img/island-player.png" width="1000" height="347" alt="Encore's island open below the notch, showing the song, a progress bar, playback controls and the current lyric.">
+    </div>
+  </div>
+
+  <div class="wrap">
+    <div class="works">
+      <span>Follows whatever is playing in</span>
+      <span class="marks">
+        <span class="mark"><i style="--m: url('assets/logos/spotify.svg')"></i>Spotify</span>
+        <span class="mark"><i style="--m: url('assets/logos/applemusic.svg')"></i>Apple Music</span>
+      </span>
+    </div>
+  </div>
+
+  <section id="scenes" class="scenes">
+    <div class="wrap">
+      <header>
+        <h2>A room for every record.</h2>
+        <p class="lede">Each scene puts the album you're playing on display, and its lights move with the beat. Sunroom turns into Lamplight at seven in the evening.</p>
+      </header>
+      <div class="switch" role="tablist" aria-label="Desktop scenes">
+        <button role="tab" id="t-rain" aria-controls="p-rain" aria-selected="true">Midnight Rain</button>
+        <button role="tab" id="t-sun" aria-controls="p-sun" aria-selected="false" tabindex="-1">Sunroom</button>
+        <button role="tab" id="t-lamp" aria-controls="p-lamp" aria-selected="false" tabindex="-1">Lamplight</button>
+        <button role="tab" id="t-table" aria-controls="p-table" aria-selected="false" tabindex="-1">Tabletop</button>
+        <button role="tab" id="t-aura" aria-controls="p-aura" aria-selected="false" tabindex="-1">Album Aura</button>
+      </div>
+      <div class="stage">
+        <figure role="tabpanel" id="p-rain" aria-labelledby="t-rain">
+          <img src="assets/img/scene-midnightRain.jpg" width="1800" height="1171" loading="lazy" alt="Midnight Rain: a windowsill at night above a wet neon street, with a bonsai under a grow light and a drone on its charger.">
+          <figcaption><strong>Midnight Rain.</strong> A wet street below the window, hover cars, and your album on a screen across the way.</figcaption>
+        </figure>
+        <figure role="tabpanel" id="p-sun" aria-labelledby="t-sun" hidden>
+          <img src="assets/img/scene-sunroom.jpg" width="1800" height="1171" loading="lazy" alt="Sunroom: a wooden sideboard in afternoon light with a houseplant, the album on a stand, a vintage turntable and a pile of sleeves.">
+          <figcaption><strong>Sunroom.</strong> Afternoon light through the blinds, dust drifting in the beams, and a houseplant that sways.</figcaption>
+        </figure>
+        <figure role="tabpanel" id="p-lamp" aria-labelledby="t-lamp" hidden>
+          <img src="assets/img/scene-lamplight.jpg" width="1800" height="1171" loading="lazy" alt="Lamplight: the same sideboard at night, lit by a single glass pendant lamp.">
+          <figcaption><strong>Lamplight.</strong> The same room after dark, lit by one glass pendant that brightens with the bass.</figcaption>
+        </figure>
+        <figure role="tabpanel" id="p-table" aria-labelledby="t-table" hidden>
+          <img src="assets/img/scene-tabletop.jpg" width="1800" height="1171" loading="lazy" alt="Tabletop: looking straight down at a wooden desk with the album, a turntable and a pile of sleeves.">
+          <figcaption><strong>Tabletop.</strong> Straight down onto the desk: the sleeve, the deck, and the pile of what you've played.</figcaption>
+        </figure>
+        <figure role="tabpanel" id="p-aura" aria-labelledby="t-aura" hidden>
+          <img src="assets/img/scene-aura.jpg" width="1800" height="1171" loading="lazy" alt="Album Aura: the album's colors spread across the desktop behind the cover, a spinning record and a pile of sleeves.">
+          <figcaption><strong>Album Aura.</strong> The cover's colors fill the desktop and drift slowly while the record spins.</figcaption>
+        </figure>
+      </div>
+    </div>
+  </section>
+
+  <section id="island">
+    <div class="wrap island-sec">
+      <div>
+        <h2>The notch, finally doing something.</h2>
+        <p class="lede">Hover over the notch and it opens into a player: the song, the time left, the line being sung and where the sound is going.</p>
+        <ul class="gestures">
+          <li><b>Hover</b><span>Open the player. Move away and it tucks back in.</span></li>
+          <li><b>Scroll</b><span>Change the volume without touching the keyboard.</span></li>
+          <li><b>Swipe</b><span>Skip to the next song, or back to the last one.</span></li>
+        </ul>
+      </div>
+      <div class="collage">
+        <img src="assets/img/island-player.png" width="1000" height="347" loading="lazy" alt="The island's player page with controls and the current lyric.">
+        <img src="assets/img/island-lyrics.png" width="1000" height="379" loading="lazy" alt="The island's lyrics page, with the current line highlighted.">
+        <img src="assets/img/island-sound.png" width="1000" height="347" loading="lazy" alt="The island's sound page, with a volume slider and the output device.">
+      </div>
+    </div>
+  </section>
+
+  <section class="details">
+    <div class="wrap">
+      <h2>Small things that make it feel alive.</h2>
+      <div class="grid">
+        <article class="cell wide deck">
+          <div class="art"><img src="assets/img/detail-deck.jpg" width="1200" height="933" loading="lazy" alt="A top-down view of Encore's vintage turntable: a teak plinth, a brushed plate, strobe dots on the platter and an S-shaped tonearm."></div>
+          <div class="txt"><h3>A deck worth looking at</h3><p>Teak plinth, brushed plate, strobe dots on the platter. The arm swings onto the record when you press play.</p></div>
+        </article>
+        <article class="cell pile">
+          <div class="art"><img src="assets/img/detail-pile.jpg" width="900" height="856" loading="lazy" alt="A loose pile of album sleeves."></div>
+          <div class="txt"><h3>Sleeves pile up</h3><p>Every song you finish leaves its cover on the pile, which clears itself after a few.</p></div>
+        </article>
+        <article class="cell glow">
+          <div class="art">
+            <img src="assets/img/scene-aura.jpg" width="1800" height="1171" loading="lazy" alt="The Album Aura scene.">
+            <img class="glowframe" src="assets/img/glow.png" width="1470" height="956" loading="lazy" alt="">
+          </div>
+          <div class="txt"><h3>A glow around the screen</h3><p>A soft rim of light around your display, tinted by the cover and pulsing on the beat.</p></div>
+        </article>
+        <article class="cell wide lyrics">
+          <div class="art"><img src="assets/img/island-lyrics.png" width="1000" height="379" loading="lazy" alt="Synced lyrics in the island, with the current line in white."></div>
+          <div class="txt"><h3>Lyrics, in time</h3><p>Synced lyrics follow the song in the island, and the current line can sit on your desktop too. Click any line to jump there.</p></div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section id="download" class="get">
+    <div class="wrap inner">
+      <div class="app">
+        <img src="assets/img/icon.png" width="132" height="132" alt="The Encore app icon: a vinyl record with a glowing label.">
+        <h2>Get Encore</h2>
+        <a class="btn" href="downloads/Encore-1.0.0.dmg" download>
+          <svg class="icon" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M224,144v64a8,8,0,0,1-8,8H40a8,8,0,0,1-8-8V144a8,8,0,0,1,16,0v56H208V144a8,8,0,0,1,16,0Zm-101.66,5.66a8,8,0,0,0,11.32,0l40-40a8,8,0,0,0-11.32-11.32L136,124.69V32a8,8,0,0,0-16,0v92.69L93.66,98.34a8,8,0,0,0-11.32,11.32Z"/></svg>
+          Download for Mac
+        </a>
+        <dl class="facts">
+          <dt>Version</dt><dd>1.0.0</dd>
+          <dt>Size</dt><dd>3.5 MB disk image</dd>
+          <dt>Runs on</dt><dd>Apple silicon and Intel Macs</dd>
+          <dt>Needs</dt><dd>macOS 14 Sonoma or later, plus Spotify or Apple Music</dd>
+        </dl>
+      </div>
+      <div class="first">
+        <h3>Opening it the first time</h3>
+        <p>Encore isn't from the App Store, so macOS stops it on first launch. You only have to allow it once.</p>
+        <ol class="steps">
+          <li><span>Drag Encore into <b>Applications</b> and open it. When the warning appears, click <b>Done</b>.</span></li>
+          <li><span>Open <b>System Settings</b> and go to <b>Privacy &amp; Security</b>.</span></li>
+          <li><span>Scroll down to the note about Encore and click <b>Open Anyway</b>.</span></li>
+        </ol>
+        <p class="perm">Encore then asks to control Spotify or Music, so it can show the song and skip tracks, and to capture audio, so the visuals move with the beat. It listens to what your Mac plays, never the microphone. It lives in the menu bar, not the Dock.</p>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <span>Encore is a free, independent app. It isn't affiliated with Spotify or Apple.</span>
+    <span>Synced lyrics from <a href="https://lrclib.net" target="_blank" rel="noopener">LRCLIB</a>.</span>
+  </div>
+</footer>
+
+<script>
+// Scene switcher: accessible tabs (click, arrow keys, Home/End) that cross-fade between screenshots.
+(() => {
+  const tabs = [...document.querySelectorAll('.switch [role="tab"]')];
+  const select = (tab, focus) => {
+    tabs.forEach(t => {
+      const on = t === tab;
+      t.setAttribute('aria-selected', on);
+      t.tabIndex = on ? 0 : -1;
+      document.getElementById(t.getAttribute('aria-controls')).hidden = !on;
+    });
+    if (focus) tab.focus();
+  };
+  tabs.forEach((t, i) => {
+    t.addEventListener('click', () => select(t));
+    t.addEventListener('keydown', e => {
+      const n = { ArrowRight: i + 1, ArrowLeft: i - 1, Home: 0, End: tabs.length - 1 }[e.key];
+      if (n === undefined) return;
+      e.preventDefault();
+      select(tabs[(n + tabs.length) % tabs.length], true);
+    });
+  });
+})();
+</script>
+</body>
+</html>
