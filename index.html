@@ -226,7 +226,7 @@ footer a { text-decoration: none; border-bottom: 1px solid var(--line); }
       <h1>Put the record on your desktop.</h1>
       <p class="lede">Encore turns what's playing in Spotify or Music into a living desktop, a notch island and an album-colored glow.</p>
       <div class="actions">
-        <a class="btn" href="downloads/Encore-1.0.0.dmg" download>
+        <a class="btn" href="downloads/Encore-1.1.0.dmg" download>
           <svg class="icon" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M224,144v64a8,8,0,0,1-8,8H40a8,8,0,0,1-8-8V144a8,8,0,0,1,16,0v56H208V144a8,8,0,0,1,16,0Zm-101.66,5.66a8,8,0,0,0,11.32,0l40-40a8,8,0,0,0-11.32-11.32L136,124.69V32a8,8,0,0,0-16,0v92.69L93.66,98.34a8,8,0,0,0-11.32,11.32Z"/></svg>
           Download for Mac
         </a>
@@ -255,10 +255,11 @@ footer a { text-decoration: none; border-bottom: 1px solid var(--line); }
     <div class="wrap">
       <header>
         <h2>A room for every record.</h2>
-        <p class="lede">Each scene puts the album you're playing on display, and its lights move with the beat. Sunroom turns into Lamplight at seven in the evening.</p>
+        <p class="lede">Each scene puts the album you're playing on display, and its lights move with the beat. Sunroom and Tabletop are lit for the real time of day, and Sunroom turns into Lamplight at sunset. Any scene can run as a screensaver.</p>
       </header>
       <div class="switch" role="tablist" aria-label="Desktop scenes">
         <button role="tab" id="t-rain" aria-controls="p-rain" aria-selected="true">Midnight Rain</button>
+        <button role="tab" id="t-academia" aria-controls="p-academia" aria-selected="false" tabindex="-1">Dark Academia</button>
         <button role="tab" id="t-sun" aria-controls="p-sun" aria-selected="false" tabindex="-1">Sunroom</button>
         <button role="tab" id="t-lamp" aria-controls="p-lamp" aria-selected="false" tabindex="-1">Lamplight</button>
         <button role="tab" id="t-table" aria-controls="p-table" aria-selected="false" tabindex="-1">Tabletop</button>
@@ -269,9 +270,13 @@ footer a { text-decoration: none; border-bottom: 1px solid var(--line); }
           <img src="assets/img/scene-midnightRain.jpg" width="1800" height="1171" loading="lazy" alt="Midnight Rain: a windowsill at night above a wet neon street, with a bonsai under a grow light and a drone on its charger.">
           <figcaption><strong>Midnight Rain.</strong> A wet street below the window, hover cars, and your album on a screen across the way.</figcaption>
         </figure>
+        <figure role="tabpanel" id="p-academia" aria-labelledby="t-academia" hidden>
+          <img src="assets/img/scene-darkAcademia.jpg" width="1800" height="1171" loading="lazy" alt="Dark Academia: a library desk at dusk in front of a tall arched window, with bookshelves either side, a candle, a green banker's lamp, the album and a turntable, and a rainy old town outside.">
+          <figcaption><strong>Dark Academia.</strong> A library desk on a wet evening: rain over the spires, a candle that flickers, and a green lamp that brightens with the bass.</figcaption>
+        </figure>
         <figure role="tabpanel" id="p-sun" aria-labelledby="t-sun" hidden>
           <img src="assets/img/scene-sunroom.jpg" width="1800" height="1171" loading="lazy" alt="Sunroom: a wooden sideboard in afternoon light with a houseplant, the album on a stand, a vintage turntable and a pile of sleeves.">
-          <figcaption><strong>Sunroom.</strong> Afternoon light through the blinds, dust drifting in the beams, and a houseplant that sways.</figcaption>
+          <figcaption><strong>Sunroom.</strong> Light through the blinds that follows the real sun, dust drifting in the beams, and a houseplant that sways.</figcaption>
         </figure>
         <figure role="tabpanel" id="p-lamp" aria-labelledby="t-lamp" hidden>
           <img src="assets/img/scene-lamplight.jpg" width="1800" height="1171" loading="lazy" alt="Lamplight: the same sideboard at night, lit by a single glass pendant lamp.">
@@ -318,7 +323,7 @@ footer a { text-decoration: none; border-bottom: 1px solid var(--line); }
         </article>
         <article class="cell pile">
           <div class="art"><img src="assets/img/detail-pile.jpg" width="900" height="856" loading="lazy" alt="A loose pile of album sleeves."></div>
-          <div class="txt"><h3>Sleeves pile up</h3><p>Every song you finish leaves its cover on the pile, which clears itself after a few.</p></div>
+          <div class="txt"><h3>Sleeves pile up</h3><p>Every song you play leaves its cover on the pile, and a weekly recap adds up what you listened to.</p></div>
         </article>
         <article class="cell glow">
           <div class="art">
@@ -340,13 +345,13 @@ footer a { text-decoration: none; border-bottom: 1px solid var(--line); }
       <div class="app">
         <img src="assets/img/icon.png" width="132" height="132" alt="The Encore app icon: a vinyl record with a glowing label.">
         <h2>Get Encore</h2>
-        <a class="btn" href="downloads/Encore-1.0.0.dmg" download>
+        <a class="btn" href="downloads/Encore-1.1.0.dmg" download>
           <svg class="icon" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M224,144v64a8,8,0,0,1-8,8H40a8,8,0,0,1-8-8V144a8,8,0,0,1,16,0v56H208V144a8,8,0,0,1,16,0Zm-101.66,5.66a8,8,0,0,0,11.32,0l40-40a8,8,0,0,0-11.32-11.32L136,124.69V32a8,8,0,0,0-16,0v92.69L93.66,98.34a8,8,0,0,0-11.32,11.32Z"/></svg>
           Download for Mac
         </a>
         <dl class="facts">
-          <dt>Version</dt><dd>1.0.0</dd>
-          <dt>Size</dt><dd>3.5 MB disk image</dd>
+          <dt>Version</dt><dd>1.1.0</dd>
+          <dt>Size</dt><dd>4.3 MB disk image</dd>
           <dt>Runs on</dt><dd>Apple silicon and Intel Macs</dd>
           <dt>Needs</dt><dd>macOS 14 Sonoma or later, plus Spotify or Apple Music</dd>
         </dl>
