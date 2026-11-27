@@ -166,7 +166,7 @@ header.nav :focus-visible { outline-color: var(--accent); }
 .pick button[aria-selected="true"] span, .pick button[aria-pressed="true"] span { display: block; }
 .pick.short button { min-height: 0; padding: 12px 0; }
 .pick.short button::before { top: 12px; }
-/* The lyric styles: two columns, in the order of the app's Style menu (the six that go a word at a time on the left) */
+/* The lyric styles: two columns of six, in the order of the app's Style menu, read down the columns */
 .kinds { grid-template-columns: 1fr 1fr; column-gap: var(--gap); align-items: start; }
 .kinds .kind { display: grid; }
 .stack > img { opacity: 0; transition: opacity .35s; }
@@ -367,7 +367,7 @@ footer.closing :focus-visible { outline-color: var(--accent); }
             <h1>Music visualizer and notch player for Mac</h1>
             <p class="lead">Encore turns what Spotify or Apple Music is playing into a desktop scene, a notch player, synced lyrics and a glow on the beat.</p>
             <div class="actions">
-              <a class="btn" href="downloads/Encore-1.3.0.dmg" download><svg class="icon" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M224,144v64a8,8,0,0,1-8,8H40a8,8,0,0,1-8-8V144a8,8,0,0,1,16,0v56H208V144a8,8,0,0,1,16,0Zm-101.66,5.66a8,8,0,0,0,11.32,0l40-40a8,8,0,0,0-11.32-11.32L136,124.69V32a8,8,0,0,0-16,0v92.69L93.66,98.34a8,8,0,0,0-11.32,11.32Z"/></svg> Download for Mac</a>
+              <a class="btn" href="downloads/Encore-1.3.1.dmg" download><svg class="icon" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M224,144v64a8,8,0,0,1-8,8H40a8,8,0,0,1-8-8V144a8,8,0,0,1,16,0v56H208V144a8,8,0,0,1,16,0Zm-101.66,5.66a8,8,0,0,0,11.32,0l40-40a8,8,0,0,0-11.32-11.32L136,124.69V32a8,8,0,0,0-16,0v92.69L93.66,98.34a8,8,0,0,0-11.32,11.32Z"/></svg> Download for Mac</a>
               <a class="link" href="#scenes">See the scenes
                 <svg class="icon" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M221.66,133.66l-72,72a8,8,0,0,1-11.32-11.32L196.69,136H40a8,8,0,0,1,0-16H196.69L138.34,61.66a8,8,0,0,1,11.32-11.32l72,72A8,8,0,0,1,221.66,133.66Z"/></svg>
               </a>
@@ -510,7 +510,7 @@ footer.closing :focus-visible { outline-color: var(--accent); }
 
     <section id="styles">
     <div class="wrap">
-      <h2>13 lyric styles for the desktop</h2>
+      <h2>12 lyric styles for the desktop</h2>
       <p class="lead">The Lyrics scene fills the desktop with the words, in the album's colours or your own. Each style takes the look of a real thing, down to its typeface.</p>
       <div class="split">
         <div class="words pick short kinds" role="tablist" aria-label="Lyric styles" aria-orientation="vertical">
@@ -520,10 +520,9 @@ footer.closing :focus-visible { outline-color: var(--accent); }
             <button type="button" role="tab" id="t-constellation" aria-controls="p-constellation" aria-selected="false" tabindex="-1"><b>Constellation</b></button>
             <button type="button" role="tab" id="t-crossword" aria-controls="p-crossword" aria-selected="false" tabindex="-1"><b>Crossword</b></button>
             <button type="button" role="tab" id="t-radar" aria-controls="p-radar" aria-selected="false" tabindex="-1"><b>Radar Sweep</b></button>
-            <button type="button" role="tab" id="t-magnifier" aria-controls="p-magnifier" aria-selected="false" tabindex="-1"><b>Magnifier</b></button>
+            <button type="button" role="tab" id="t-flap" aria-controls="p-flap" aria-selected="false" tabindex="-1"><b>Split-Flap Board</b></button>
           </div>
           <div class="kind">
-            <button type="button" role="tab" id="t-flap" aria-controls="p-flap" aria-selected="false" tabindex="-1"><b>Split-Flap Board</b></button>
             <button type="button" role="tab" id="t-rearrange" aria-controls="p-rearrange" aria-selected="false" tabindex="-1"><b>Rearrange</b></button>
             <button type="button" role="tab" id="t-record" aria-controls="p-record" aria-selected="false" tabindex="-1"><b>On the Record</b></button>
             <button type="button" role="tab" id="t-glass" aria-controls="p-glass" aria-selected="false" tabindex="-1"><b>Fogged Glass</b></button>
@@ -538,7 +537,6 @@ footer.closing :focus-visible { outline-color: var(--accent); }
           <img loading="lazy" role="tabpanel" id="p-constellation" aria-labelledby="t-constellation" src="assets/img/lyric-constellation.jpg" srcset="assets/img/lyric-constellation-800.jpg 800w, assets/img/lyric-constellation.jpg 1200w" sizes="(max-width: 1023px) 100vw, 628px" width="1200" height="780" alt="The word HANGING drawn as a constellation: stars at the corners of each letter, joined by fine lines.">
           <img loading="lazy" role="tabpanel" id="p-crossword" aria-labelledby="t-crossword" src="assets/img/lyric-crossword.jpg" srcset="assets/img/lyric-crossword-800.jpg 800w, assets/img/lyric-crossword.jpg 1200w" sizes="(max-width: 1023px) 100vw, 628px" width="1200" height="780" alt="The line laid out as a crossword, each word crossing the last, its letters written into the squares by hand.">
           <img loading="lazy" role="tabpanel" id="p-radar" aria-labelledby="t-radar" src="assets/img/lyric-radar.jpg" srcset="assets/img/lyric-radar-800.jpg 800w, assets/img/lyric-radar.jpg 1200w" sizes="(max-width: 1023px) 100vw, 628px" width="1200" height="780" alt="A radar screen with the sweep going round, each word of the line a contact with a small data tag.">
-          <img loading="lazy" role="tabpanel" id="p-magnifier" aria-labelledby="t-magnifier" src="assets/img/lyric-magnifier.jpg" srcset="assets/img/lyric-magnifier-800.jpg 800w, assets/img/lyric-magnifier.jpg 1200w" sizes="(max-width: 1023px) 100vw, 628px" width="1200" height="780" alt="The whole song in small print, with a magnifying glass enlarging the words being sung.">
           <img loading="lazy" role="tabpanel" id="p-flap" aria-labelledby="t-flap" src="assets/img/lyric-flap.jpg" srcset="assets/img/lyric-flap-800.jpg 800w, assets/img/lyric-flap.jpg 1200w" sizes="(max-width: 1023px) 100vw, 628px" width="1200" height="780" alt="The line spelled out on a departure board, a lamp lit under the word being sung.">
           <img loading="lazy" role="tabpanel" id="p-rearrange" aria-labelledby="t-rearrange" src="assets/img/lyric-rearrange.jpg" srcset="assets/img/lyric-rearrange-800.jpg 800w, assets/img/lyric-rearrange.jpg 1200w" sizes="(max-width: 1023px) 100vw, 628px" width="1200" height="780" alt="Letters flying from one line to the next and regrouping, set in a classic serif.">
           <img loading="lazy" role="tabpanel" id="p-record" aria-labelledby="t-record" src="assets/img/lyric-record.jpg" srcset="assets/img/lyric-record-800.jpg 800w, assets/img/lyric-record.jpg 1200w" sizes="(max-width: 1023px) 100vw, 628px" width="1200" height="780" alt="The line in capitals around a spinning record, read by the stylus at the top.">
@@ -617,11 +615,11 @@ footer.closing :focus-visible { outline-color: var(--accent); }
           <img src="assets/img/city.jpg" srcset="assets/img/city-800.jpg 800w, assets/img/city.jpg 1600w" sizes="(max-width: 639px) 720px, (max-width: 1023px) 100vw, 628px" width="1600" height="800" loading="lazy" alt="The city from Encore's Neon Rain scene: wet rooftops with landing pads, and a neon street running away between the towers.">
           <div class="get">
             <img loading="lazy" src="assets/img/icon-128.png" width="64" height="64" alt="The Encore app icon: a vinyl record with a glowing label.">
-            <a class="btn" href="downloads/Encore-1.3.0.dmg" download><svg class="icon" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M224,144v64a8,8,0,0,1-8,8H40a8,8,0,0,1-8-8V144a8,8,0,0,1,16,0v56H208V144a8,8,0,0,1,16,0Zm-101.66,5.66a8,8,0,0,0,11.32,0l40-40a8,8,0,0,0-11.32-11.32L136,124.69V32a8,8,0,0,0-16,0v92.69L93.66,98.34a8,8,0,0,0-11.32,11.32Z"/></svg> Download for Mac</a>
+            <a class="btn" href="downloads/Encore-1.3.1.dmg" download><svg class="icon" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M224,144v64a8,8,0,0,1-8,8H40a8,8,0,0,1-8-8V144a8,8,0,0,1,16,0v56H208V144a8,8,0,0,1,16,0Zm-101.66,5.66a8,8,0,0,0,11.32,0l40-40a8,8,0,0,0-11.32-11.32L136,124.69V32a8,8,0,0,0-16,0v92.69L93.66,98.34a8,8,0,0,0-11.32,11.32Z"/></svg> Download for Mac</a>
           </div>
           <dl class="facts">
-            <dt>Version</dt><dd>1.3.0</dd>
-            <dt>Size</dt><dd>5.4 MB disk image</dd>
+            <dt>Version</dt><dd>1.3.1</dd>
+            <dt>Size</dt><dd>5.3 MB disk image</dd>
             <dt>Runs on</dt><dd>Apple silicon and Intel Macs</dd>
             <dt>Needs</dt><dd>macOS 14 or later, plus Spotify or Apple Music</dd>
           </dl>
@@ -675,7 +673,7 @@ footer.closing :focus-visible { outline-color: var(--accent); }
       <div class="words">
         <h2>Encore is free for macOS 14 and later</h2>
         <p>One download for Apple silicon and Intel Macs, with no account.</p>
-        <a class="btn" href="downloads/Encore-1.3.0.dmg" download><svg class="icon" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M224,144v64a8,8,0,0,1-8,8H40a8,8,0,0,1-8-8V144a8,8,0,0,1,16,0v56H208V144a8,8,0,0,1,16,0Zm-101.66,5.66a8,8,0,0,0,11.32,0l40-40a8,8,0,0,0-11.32-11.32L136,124.69V32a8,8,0,0,0-16,0v92.69L93.66,98.34a8,8,0,0,0-11.32,11.32Z"/></svg> Download for Mac</a>
+        <a class="btn" href="downloads/Encore-1.3.1.dmg" download><svg class="icon" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M224,144v64a8,8,0,0,1-8,8H40a8,8,0,0,1-8-8V144a8,8,0,0,1,16,0v56H208V144a8,8,0,0,1,16,0Zm-101.66,5.66a8,8,0,0,0,11.32,0l40-40a8,8,0,0,0-11.32-11.32L136,124.69V32a8,8,0,0,0-16,0v92.69L93.66,98.34a8,8,0,0,0-11.32,11.32Z"/></svg> Download for Mac</a>
       </div>
       <div class="picture"><img src="assets/img/icon.png" width="512" height="512" loading="lazy" alt=""></div>
     </div>
